@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ car.name }}</title>
+    <link rel="stylesheet" href="{% static 'css/detail.css' %}">
+</head>
+<body>
+    <h1>{{ car.name }}</h1>
+    <p>Price: ${{car.price}}</p>
+    <p>Status:
+        {%if car.in_stock%}
+        (in stock)
+        {%else%}
+        (out of stock)
+        {% endif %}
+
+    </p>
+
+    <a href="{% url 'car_list' %}">Back to cars list</a>
+    
+
+    <h2>Recently Viewed</h2>
+    {% if recent_cars %}
+        <ul>
+            {% for p in recent_cars %}
+                <li>
+                    <a href="{% url 'car_detail' p.pk %}">{{ p.name }}</a>
+                    - ${{ p.price }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No recently viewed cars yet.</p>
+    {% endif %}
+</body>
+</html>

@@ -1,0 +1,20 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Car</title>
+    <link rel="stylesheet" href="{% static 'css/add_car.css' %}">
+</head>
+<body>
+    <h1>Add new Car</h1>
+    <form method="post">
+         {% csrf_token %}
+         {{ form.as_p }} 
+         <button type="submit"> Add Car </button>
+    </form>
+
+    <a href="{% url 'car_list' %}">back to list page</a>
+</body>
+</html>
