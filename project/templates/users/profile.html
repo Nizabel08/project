@@ -6,24 +6,77 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
     <link rel="stylesheet" href="{% static 'css/profile.css' %}">
-
-    <body>
+</head>
+<body>
     <h1>Profile Info</h1>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        <h3>Account information</h3>
+        <h3>Account Information</h3>
         {{ u_form.as_p }}
 
-        <h3>Profile Infromation</h3>
+        <h3>Profile Information</h3>
         {{ p_form.as_p }}
         <button type="submit">Save Changes</button>
     </form>
-    
-    {% if request.user.userprofile.profile_picture %}
-    <img src="{{ request.user.userprofile.profile_picture.url }}" width="150" alt="profile picture">
+
+    <h3>Profile Picture</h3>
+    {% if request.user.userprofile.avatar %}
+        <img src="{{ request.user.userprofile.avatar.url }}" width="150" alt="profile picture">
     {% else %}
-    <img src="project/media/profile_pics/default.jpg" width="150" alt="profile picture">
+        <img src="{% static 'profile_pics/default.jpg' %}" width="150" alt="profile picture">
     {% endif %}
-    
+
+    <hr>
+    <h3>Rented Cars</h3>
+    {% if rentals %}
+        <ul>
+        {% for rental in rentals %}
+            <li>
+                {{ rental.car.brand }} {{ rental.car.model }} -
+                City: {{ rental.city_rented_in }},
+                Paid: {{ rental.price_paid }},
+                Days: {{ rental.days }}
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No rented cars.</p>
+    {% endif %}
+
+    <hr>
+    <h3>Liked Cars</h3>
+    {% if favorites %}
+        <ul>
+        {% for car in favorites %}
+            <li>{{ car.brand }} {{ car.model }} ({{ car.year }})</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No liked cars.</p>
+    {% endif %}
+
+    <hr>
+    <h3>My Posted Cars</h3>
+    {% if my_cars %}
+        <ul>
+        {% for car in my_cars %}
+            <li>{{ car.brand }} {{ car.model }} ({{ car.year }})</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No posted cars.</p>
+    {% endif %}
+
+    <hr>
+    <h3>Notifications</h3>
+    {% if notifications %}
+        <ul>
+        {% for notif in notifications %}
+            <li>{{ notif.message }} {% if not notif.read %}<strong>(new)</strong>{% endif %}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No notifications.</p>
+    {% endif %}
 </body>
 </html>

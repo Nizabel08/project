@@ -12,6 +12,6 @@ class CarMiddleware :
         duration = time.time() - start_time
 
         if request.path.startswith('/Cars') :
-            print(f'[Car] request to {request.path} took {duration:.3f} seconds')
+            print(f'[car] request to {request.path} took {duration:.3f} seconds')
         return response 
 

@@ -1,20 +1,11 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update cars</title>
-    <link rel="stylesheet" href="{% static 'css/update.css' %}">
-</head>
-<body>
-    <h2>Admin Update Car</h2>
-    <form method="post">
-        {% csrf_token %}
-        <input type="hidden" name="_method" value="PUT">
-        {{ form.as_p }}
-        <Button type = 'submit'>UPDATE</Button>
-    </form>
-    
-</body>
-</html>
+{% extends 'base.html' %}
+{% block content %}
+<link rel="stylesheet" href="/static/css/update.css">
+<h2>Admin Update Car</h2>
+<form method="post">
+    {% csrf_token %}
+    <input type="hidden" name="_method" value="PUT">
+    {{ form.as_p }}
+    <Button type = 'submit'>UPDATE</Button>
+</form>
+{% endblock %}

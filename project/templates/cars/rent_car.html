@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+<link rel="stylesheet" href="/static/css/rent_car.css">
+<div class="rent-container">
+    <h1>Rent Car: {{ car.name }}</h1>
+    <div class="car-info">
+        <img src="{{ car.main_photo.url }}" alt="{{ car.name }}" class="car-photo">
+        <p><strong>Brand:</strong> {{ car.brand }}</p>
+        <p><strong>Model:</strong> {{ car.model }}</p>
+        <p><strong>Year:</strong> {{ car.year }}</p>
+        <p><strong>Price per day:</strong> ${{ car.price_per_day }}</p>
+    </div>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Confirm Rental</button>
+    </form>
+</div>
+{% endblock %}

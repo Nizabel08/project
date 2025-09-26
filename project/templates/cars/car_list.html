@@ -1,59 +1,38 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cars</title>
-    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
-</head>
-<body>
-    <h1>Cars</h1>
+{% extends 'base.html' %}
+{% block content %}
+<link rel="stylesheet" href="/static/css/list.css">
+<h1>Cars</h1>
 
-    <!-- Filter Form -->
-    <form method="get" action="." class="filter-form">
-        <input type="text" name="q" placeholder="Search by name" value="{{ request.GET.q }}">
+<!-- Filter Form -->
+<form method="get" action="." class="filter-form">
+    <input type="text" name="city" placeholder="City" value="{{ request.GET.city }}">
+    <input type="number" name="year_min" placeholder="Year from" value="{{ request.GET.year_min }}">
+    <input type="number" name="year_max" placeholder="Year to" value="{{ request.GET.year_max }}">
+    <input type="number" name="capacity" placeholder="Capacity" value="{{ request.GET.capacity }}">
+    <button type="submit">Filter</button>
+    <a href="{% url 'cars:home' %}">Reset</a>
+</form>
+<br>
 
-        <input type="text" name="category" placeholder="Category" value="{{ request.GET.category }}">
+<!-- Car List -->
+<ul class="car-list">
+    {% for car in cars %}
+        <li class="car-item">
+            <a href="{% url 'cars:car_detail' car.pk %}">{{ car.brand }} {{ car.model }} ({{ car.year }})</a>
+            - {{ car.price_per_day }}₾
+            {% if car.available %}
+                <span class="stock in-stock">(available)</span>
+            {% else %}
+                <span class="stock out-of-stock">(unavailable)</span>
+            {% endif %}
+        </li>
+    {% empty %}
+        <li>No cars available</li>
+    {% endfor %}
+</ul>
 
-        <input type="number" step="0.01" name="min_price" placeholder="Min price" value="{{ request.GET.min_price }}">
-        <input type="number" step="0.01" name="max_price" placeholder="Max price" value="{{ request.GET.max_price }}">
-
-        <!-- Sorting Dropdown -->
-        <select name="order_by">
-            <option value="">Sort by</option>
-            <option value="name" {% if request.GET.order_by == "name" %}selected{% endif %}>Name (A-Z)</option>
-            <option value="-name" {% if request.GET.order_by == "-name" %}selected{% endif %}>Name (Z-A)</option>
-            <option value="price" {% if request.GET.order_by == "price" %}selected{% endif %}>Price (Low → High)</option>
-            <option value="-price" {% if request.GET.order_by == "-price" %}selected{% endif %}>Price (High → Low)</option>
-            <option value="id" {% if request.GET.order_by == "id" %}selected{% endif %}>Oldest First</option>
-            <option value="-id" {% if request.GET.order_by == "-id" %}selected{% endif %}>Newest First</option>
-        </select>
-
-        <button type="submit">Apply</button>
-        <a href="{% url 'product_list' %}">Reset</a>
-    </form>
-
-    <hr>
-
-    <!-- Product List -->
-    <ul class="product-list">
-        {% for product in products %}
-            <li class="product-item">
-                <a href="{% url 'product_detail' product.pk %}">{{ product.name }}</a>
-                - ${{ product.price }}
-                {% if product.in_stock %}
-                    <span style="color: rgba(2, 142, 2, 0.542);" class="stock in-stock">(in stock)</span>
-                {% else %}
-                    <span style="color: rgba(255, 0, 0, 0.596);" class="stock out-of-stock">(out of stock)</span>
-                {% endif %}
-            </li>
-        {% empty %}
-            <li>No cars available</li>
-        {% endfor %}
-    </ul>
-
-    <!-- Pagination -->
+<!-- Pagination -->
+{% endblock %}
     <div class="pagination">
         {% if is_paginated %}
             <span class="page-info">

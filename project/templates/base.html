@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Car Rental{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+    <style>
+    body {
+        background-color: rgba(135, 207, 235, 0.618);
+        min-height: 100vh;
+        margin: 0;
+        position: relative;
+        overflow-x: hidden;
+    }
+    .main-content {
+        position: relative;
+        z-index: 1;
+    }
+    .center-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 40px auto;
+    width: 55vw;
+    height: 55vh;
+    max-width: 700px;
+    max-height: 400px;
+    /* Remove opacity here to make image fully visible */
+}
+
+.center-image img {
+    width: 50%;
+    height: 50%;
+    object-fit: contain;
+    border-radius: 12px; /* optional: slightly rounded corners */
+    border: 5px solid #1E90FF; /* solid blue frame */
+    box-shadow: 0 0 20px rgba(30,144,255,0.5); /* soft blue glow */
+}
+
+    @media (max-width: 700px) {
+        .center-image {
+            width: 90vw;
+            height: 40vh;
+            max-width: none;
+            max-height: none;
+        }
+    }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="main-content">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

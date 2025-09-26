@@ -1,0 +1,41 @@
+*{
+    color: rgb(36, 61, 62);
+}    
+    
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: rgba(135, 207, 235, 0.618);
+    margin: 0;
+    padding: 20px;
+    color: rgb(36, 61, 62);
+
+}
+
+
+h1{
+    text-align: center;
+    color: rgb(75, 0, 0);
+}
+
+form{
+    max-width: 500px;
+    margin: 20px auto;
+    background-color: rgba(255, 255, 255, 0.178);
+    border-radius: 8px;
+    padding: 20px;
+    
+}
+
+
+button{
+    background-color: rgba(95, 158, 160, 0.336);
+    color: rgb(36, 61, 62);
+    outline: none;
+    border: none;
+    border-radius: 2px;
+    padding: auto 4px;
+}
+
+div{
+    padding: 5px;
+}

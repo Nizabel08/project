@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<link rel="stylesheet" href="/static/css/list.css">
+<style>
+.cars-bg-wrapper {
+    position: relative;
+    border-radius: 24px;
+    box-shadow: 0 0 40px 10px rgba(135,207,235,0.15);
+    padding: 32px 24px;
+    margin: 0 auto 32px auto;
+    max-width: 1200px;
+    min-height: 70vh;
+    background-color: rgba(135, 207, 235, 0.618);
+    overflow: hidden;
+}
+.cars-bg-wrapper .bg-blur {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 1;
+    background: url('https://kreolcars-seychelles.com/wp-content/uploads/2023/11/getty_649362670_395940.jpg') no-repeat center center;
+    background-size: cover;
+    filter: blur(2px) brightness(0.8);
+    opacity: 0.9;
+}
+.cars-bg-wrapper .cars-content {
+    position: relative;
+    z-index: 2;
+    opacity: 1;
+}
+</style>
+<div class="cars-bg-wrapper">
+    <div class="bg-blur"></div>
+    <div class="cars-content">
+        <h1>Cars</h1>
+        <!-- Filter Form -->
+        <form method="get" action="." class="filter-form" style="margin-bottom: 24px;">
+            <input type="text" name="city" placeholder="City" value="{{ request.GET.city }}">
+            <input type="number" name="year_min" placeholder="Year from" value="{{ request.GET.year_min }}">
+            <input type="number" name="year_max" placeholder="Year to" value="{{ request.GET.year_max }}">
+            <input type="number" name="capacity" placeholder="Capacity" value="{{ request.GET.capacity }}">
+            <button type="submit">Filter</button>
+            <a href="{% url 'cars:home' %}">Reset</a>
+        </form>
+        <!-- Car List -->
+        <ul class="car-list">
+            {% for car in cars %}
+                <li class="car-item">
+                    <a href="{% url 'cars:car_detail' car.pk %}">{{ car.brand }} {{ car.model }} ({{ car.year }})</a>
+                    - {{ car.price_per_day }}₾
+                    {% if car.available %}
+                        <span class="stock in-stock">(available)</span>
+                    {% else %}
+                        <span class="stock out-of-stock">(unavailable)</span>
+                    {% endif %}
+                </li>
+            {% empty %}
+                <li>No cars available</li>
+            {% endfor %}
+        </ul>
+        <!-- Pagination -->
+        <div class="pagination">
+            {% if is_paginated %}
+                <span class="page-info">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                </span>
+                {% if page_obj.has_previous %}
+                    <a href="?page=1{% if querystring %}&{{ querystring }}{% endif %}">First</a>
+                    <a href="?page={{ page_obj.previous_page_number }}{% if querystring %}&{{ querystring }}{% endif %}">Previous</a>
+                {% endif %}
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <strong>{{ num }}</strong>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <a href="?page={{ num }}{% if querystring %}&{{ querystring }}{% endif %}">{{ num }}</a>
+                    {% endif %}
+                {% endfor %}
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}{% if querystring %}&{{ querystring }}{% endif %}">Next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}{% if querystring %}&{{ querystring }}{% endif %}">Last</a>
+                {% endif %}
+            {% endif %}
+        </div>
+        {% if messages %}
+        <div class="messages">
+            <ul>
+            {% for message in messages %}
+                <li class="{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

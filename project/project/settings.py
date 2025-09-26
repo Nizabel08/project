@@ -15,6 +15,7 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+LOGIN_URL = '/users/login/'  # match your actual login page URL
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -37,10 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',  # ჩაშენებული სესიების გამოყენებისთვის
     'django.contrib.messages',  # მესიჯები
     'django.contrib.staticfiles',
-    'products',
+    'cars',
     'users',
 ]
-
+AUTH_USER_MODEL = 'users.CustomUser' 
 # აღწერს კომუნიკაციას back-end-სა და იუზერის მიერ გაგზავნი request-ს შორის
 # client(request) -> middlware -> view -> middlware -> response
 # middleware აგვარებს უსაფრთხოებას, ავტორიზაციას...
@@ -53,7 +54,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'products.middleware.ProductMiddleware',
+    'cars.middleware.CarMiddleware',
 ]
 
 ROOT_URLCONF = 'project.urls'
@@ -153,8 +154,7 @@ EMAIL_USE_TLS = True
 
 from decouple import config
 
-# EMAIL_HOST_USER = 'nizabel.japaridze1@gmail.com'
-# EMAIL_HOST_PASSWORD = 'odoy xkhv mnjz fxfr'  # დაგენერირებული პაროლი
+
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')  # დაგენერირებული პაროლი
 
