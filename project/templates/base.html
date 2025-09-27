@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Car Rental{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+    <link rel="stylesheet" href="{% static 'css/list.css' %}">
+    {% block extra_css %}{% endblock %}
     <style>
     body {
         background-color: rgba(135, 207, 235, 0.618);
@@ -48,11 +49,27 @@
         }
     }
     </style>
-    {% block extra_css %}{% endblock %}
 </head>
 <body>
-    <div class="main-content">
-        {% block content %}{% endblock %}
+    <div class="main-content" style="display: flex; flex-direction: row; min-height: 100vh;">
+        <!-- Sidebar Container with Burger Menu -->
+        <button class="burger-menu" id="burger-menu" aria-label="Open sidebar" style="position:fixed;top:18px;left:18px;z-index:1100;background:rgba(120,170,210,0.28);border:none;border-radius:8px;padding:8px 16px;font-size:2em;cursor:pointer;display:none;">
+            <span id="burger-icon" style="display:block;">&#9776;</span>
+            <span id="close-icon" style="display:none;">&times;</span>
+        </button>
+        <div class="sidebar-container" id="sidebar-container" style="display:block;">
+            <div class="sidebar sidebar-page" id="sidebar">
+                <a href="{% url 'cars:home' %}" class="sidebar-btn">Home</a>
+                <a href="{% url 'users:login' %}" class="sidebar-btn">Login</a>
+                <a href="{% url 'users:profile' %}" class="sidebar-btn">Profile</a>
+                <a href="{% url 'users:register' %}" class="sidebar-btn">Register</a>
+                <a href="{% url 'users:contact' %}" class="sidebar-btn">Contact</a>
+            </div>
+        </div>
+        <div style="flex:1;">
+            {% block content %}{% endblock %}
+        </div>
+        <script src="/static/js/burger.js"></script>
     </div>
 </body>
 </html>

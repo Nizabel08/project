@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
+<link rel="stylesheet" href="/static/css/list.css">
 <link rel="stylesheet" href="/static/css/register.css">
 <h1>CREATE ACCOUNT</h1>
 <form method="post" enctype="multipart/form-data">
@@ -8,5 +9,4 @@
     {{ profile_form.as_p }}
     <button type="submit">Register</button>
 </form>
-<p>Have an account? <a href="{% url 'users:login' %}">Login</a>.</p>
 {% endblock %}

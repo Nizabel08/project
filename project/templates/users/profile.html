@@ -1,78 +1,91 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile</title>
-    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
-</head>
-<body>
-    <h1>Profile Info</h1>
-    <a href="{% url 'cars:home' %}" style="display:inline-block;margin-bottom:20px;">&larr; Go to Cars List Page</a>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <h3>Account Information</h3>
-        {{ u_form.as_p }}
-
-        <h3>Profile Information</h3>
-        {{ p_form.as_p }}
-        <button type="submit">Save Changes</button>
-    </form>
-
-
-
-    <hr>
-    <h3>Rented Cars</h3>
-{% if rentals %}
-    <ul>
-    {% for rental in rentals %}
-        <li>
-            {{ rental.car.brand }} {{ rental.car.model }} -
-            City: {{ rental.city_rented_in }},
-            Paid: {{ rental.price_paid }},
-            Days: {{ rental.days }}
-        </li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No rented cars.</p>
-{% endif %}
-
-    <hr>
-    <h3>Liked Cars</h3>
-    {% if favorites %}
-        <ul>
-        {% for car in favorites %}
-            <li>{{ car.brand }} {{ car.model }} ({{ car.year }})</li>
-        {% endfor %}
-        </ul>
-    {% else %}
-        <p>No liked cars.</p>
-    {% endif %}
-
-    <hr>
-    <h3>My Posted Cars</h3>
-    {% if my_cars %}
-        <ul>
-        {% for car in my_cars %}
-            <li>{{ car.brand }} {{ car.model }} ({{ car.year }})</li>
-        {% endfor %}
-        </ul>
-    {% else %}
-        <p>No posted cars.</p>
-    {% endif %}
-
-    <hr>
-    <h3>Notifications</h3>
-    {% if notifications %}
-        <ul>
-        {% for notif in notifications %}
-            <li>{{ notif.message }} {% if not notif.read %}<strong>(new)</strong>{% endif %}</li>
-        {% endfor %}
-        </ul>
-    {% else %}
-        <p>No notifications.</p>
-    {% endif %}
-</body>
-</html>
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+<style>
+.profile-bg-wrapper {
+    position: relative;
+    border-radius: 24px;
+    box-shadow: 0 0 40px 10px rgba(135,207,235,0.15);
+    padding: 32px 24px;
+    margin: 0 auto 32px auto;
+    max-width: 80%;
+    min-height: 70vh;
+    background-color: rgba(135, 207, 235, 0.618);
+    overflow: hidden;
+}
+.profile-bg-wrapper .bg-blur {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 1;
+    background: url('https://kreolcars-seychelles.com/wp-content/uploads/2023/11/getty_649362670_395940.jpg') no-repeat center center;
+    background-size: cover;
+    filter: blur(2px) brightness(0.8);
+    opacity: 0.9;
+}
+.profile-bg-wrapper .profile-content {
+    position: relative;
+    z-index: 2;
+    opacity: 1;
+}
+</style>
+{% endblock %}
+{% block content %}
+<div class="profile-bg-wrapper">
+    <div class="bg-blur"></div>
+    <div class="profile-content">
+        <div style="display: flex; gap: 32px; align-items: flex-start;">
+            <div style="flex: 0.7; min-width: 220px; max-width: 320px;">
+                <h3>Rented Cars</h3>
+                {% if rentals %}
+                    <ul>
+                    {% for rental in rentals %}
+                        <li>
+                            {{ rental.car.brand }} {{ rental.car.model }} -
+                            City: {{ rental.city_rented_in }},
+                            Paid: {{ rental.price_paid }},
+                            Days: {{ rental.days }}
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>No rented cars.</p>
+                {% endif %}
+                <hr>
+                <h3>Liked Cars</h3>
+                {% if favorites %}
+                    <ul>
+                    {% for car in favorites %}
+                        <li>{{ car.brand }} {{ car.model }} ({{ car.year }})</li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>No liked cars.</p>
+                {% endif %}
+                <hr>
+                <h3>My Posted Cars</h3>
+                {% if my_cars %}
+                    <ul>
+                    {% for car in my_cars %}
+                        <li>{{ car.brand }} {{ car.model }} ({{ car.year }})</li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>No posted cars.</p>
+                {% endif %}
+            </div>
+            <div style="flex: 1; min-width: 320px;">
+                <h1>Profile Info</h1>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <h3>Account Information</h3>
+                    {{ u_form.as_p }}
+                    <h3>Profile Information</h3>
+                    {{ p_form.as_p }}
+                    <button type="submit">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

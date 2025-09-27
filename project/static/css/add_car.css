@@ -17,23 +17,32 @@ h1{
     color: rgb(75, 0, 0);
 }
 
-form{
+
+form {
     max-width: 500px;
-    margin: 20px auto;
-    background-color: rgba(255, 255, 255, 0.178);
-    border-radius: 8px;
-    padding: 20px;
-    
+    margin: 24px auto;
+    background: rgba(255,255,255,0.22);
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(25,118,210,0.14);
+    padding: 28px 24px;
 }
-
-
-button{
-    background-color: rgba(95, 158, 160, 0.336);
-    color: rgb(36, 61, 62);
+button {
+    background: linear-gradient(90deg, #1976d2 60%, #2196f3 100%);
+    color: #fff;
     outline: none;
     border: none;
-    border-radius: 2px;
-    padding: auto 4px;
+    border-radius: 8px;
+    padding: 10px 24px;
+    font-size: 1.08em;
+    font-weight: bold;
+    box-shadow: 0 2px 8px rgba(25,118,210,0.10);
+    cursor: pointer;
+    margin-top: 12px;
+    transition: background 0.2s, color 0.2s;
+}
+button:hover {
+    background: #1565c0;
+    color: #fff;
 }
 
 div{

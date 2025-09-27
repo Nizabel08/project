@@ -9,7 +9,7 @@
     box-shadow: 0 0 40px 10px rgba(135,207,235,0.15);
     padding: 32px 24px;
     margin: 0 auto 32px auto;
-    max-width: 1200px;
+    max-width: 80%;
     min-height: 70vh;
     background-color: rgba(135, 207, 235, 0.618);
     overflow: hidden;
@@ -28,6 +28,53 @@
     z-index: 2;
     opacity: 1;
 }
+/* Pagination page numbers color */
+.pagination strong,
+.pagination a {
+    color: #23413e !important;
+    font-weight: bold;
+    text-decoration: none;
+    transition: color 0.2s;
+    margin: 0 2px;
+}
+.pagination a:hover {
+    color: #1976d2 !important;
+    text-decoration: underline;
+}
+/* Vivid car links like sidebar */
+/* Car links as plain text, same color as Cars heading */
+.car-list a {
+    color: #23413e !important;
+    font-weight: bold;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+.car-list a:hover {
+    color: #23413eae !important;
+    text-decoration: underline;
+}
+.filter-form .filter-reset {
+    background: linear-gradient(90deg, #1976d2 60%, #2196f3 100%);
+    color: #fff;
+    outline: none;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 24px;
+    font-size: 1.08em;
+    font-weight: bold;
+    box-shadow: 0 2px 8px rgba(25,118,210,0.10);
+    cursor: pointer;
+    margin-top: 12px;
+    margin-left: 8px;
+    transition: background 0.2s, color 0.2s;
+    text-decoration: none;
+    display: inline-block;
+}
+.filter-form button:hover,
+.filter-form .filter-reset:hover {
+    background: #1565c0;
+    color: #fff;
+}
 </style>
 <div class="cars-bg-wrapper">
     <div class="bg-blur"></div>
@@ -39,8 +86,10 @@
             <input type="number" name="year_min" placeholder="Year from" value="{{ request.GET.year_min }}">
             <input type="number" name="year_max" placeholder="Year to" value="{{ request.GET.year_max }}">
             <input type="number" name="capacity" placeholder="Capacity" value="{{ request.GET.capacity }}">
-            <button type="submit">Filter</button>
-            <a href="{% url 'cars:home' %}">Reset</a>
+            <div style="display: flex; gap: 12px; align-items: center; margin-top: 8px;">
+                <button type="submit" style="height: 25px; width: 52px; padding: 3.5px; color: #23413e; background-color: rgba(95, 158, 160, 0.55); border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Filter</button>
+                <a href="{% url 'cars:home' %}" style="color: #23413e; background-color: rgba(95, 158, 160, 0.55); border-radius: 8px; padding: 3.5px 12px; font-weight: bold; text-decoration: none;">Reset</a>
+            </div>
         </form>
         <!-- Car List -->
         <ul class="car-list">

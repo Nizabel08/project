@@ -1,17 +1,17 @@
-{% extends 'base.html' %}
+
 {% block content %}
 
 <link rel="stylesheet" href="/static/css/detail.css">
 <style>
 /* Button hover styles */
-.car-action-btn,
-.edit-btn,
-.sidebar-nav-btn {
+car-action-btn,
+edit-btn,
+sidebar-nav-btn {
     transition: background 0.2s, color 0.2s, box-shadow 0.2s;
 }
-.car-action-btn:hover,
-.edit-btn:hover,
-.sidebar-nav-btn:hover {
+car-action-btn:hover,
+edit-btn:hover,
+sidebar-nav-btn:hover {
     background: #1976d2 !important;
     color: #fff !important;
     box-shadow: 0 2px 8px rgba(25, 118, 210, 0.15);
@@ -111,5 +111,4 @@
     <!-- Optional: Map section -->
     <!-- <div id="map"></div> -->
 
-<a href="{% url 'cars:home' %}">back to list page</a></body>
 </html>

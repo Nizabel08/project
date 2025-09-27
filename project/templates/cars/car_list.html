@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 <link rel="stylesheet" href="/static/css/list.css">
+
 <h1>Cars</h1>
 
 <!-- Filter Form -->
@@ -9,7 +10,7 @@
     <input type="number" name="year_min" placeholder="Year from" value="{{ request.GET.year_min }}">
     <input type="number" name="year_max" placeholder="Year to" value="{{ request.GET.year_max }}">
     <input type="number" name="capacity" placeholder="Capacity" value="{{ request.GET.capacity }}">
-    <button type="submit">Filter</button>
+    <button type="submit" style="height: 15px;">Filter</button>
     <a href="{% url 'cars:home' %}" class="filter-reset">Reset</a>
 </form>
 <br>
@@ -22,6 +23,20 @@
                 {% if car.photos.first %}
                     <img src="{{ car.photos.first.image.url }}" width="120" alt="Car photo">
                 {% else %}
+                    <img src="/static/car_pics/default_car.jpg" width="120" alt="Default car photo">
+                {% endif %}
+            </div>
+            <a href="{% url 'cars:car_detail' car.pk %}">{{ car.brand }} {{ car.model }} ({{ car.year }})</a>
+            - {{ car.price_per_day }}₾
+            {% if car.available %}
+                <span class="stock in-stock">(available)</span>
+            {% else %}
+                <span class="stock out-of-stock">(unavailable)</span>
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>
+    </script>
                     <img src="/static/car_pics/default_car.jpg" width="120" alt="Default car photo">
                 {% endif %}
             </div>

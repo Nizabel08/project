@@ -1,15 +1,53 @@
+
 {% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+<style>
+.login-bg-wrapper {
+    position: relative;
+    border-radius: 24px;
+    box-shadow: 0 0 40px 10px rgba(135,207,235,0.15);
+    padding: 32px 24px;
+    margin: 0 auto 32px auto;
+    max-width: 80%;
+    min-height: 70vh;
+    background-color: rgba(135, 207, 235, 0.618);
+    overflow: hidden;
+}
+.login-bg-wrapper .bg-blur {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 1;
+    background: url('https://kreolcars-seychelles.com/wp-content/uploads/2023/11/getty_649362670_395940.jpg') no-repeat center center;
+    background-size: cover;
+    filter: blur(2px) brightness(0.8);
+    opacity: 0.9;
+}
+.login-bg-wrapper .login-content {
+    position: relative;
+    z-index: 2;
+    opacity: 1;
+}
+</style>
+{% endblock %}
+
 {% block content %}
-<link rel="stylesheet" href="/static/css/profile.css">
-<h2>Login</h2>
-<form method="post">
-    {% csrf_token %}
-    <input type="text" name="phone" placeholder="Phone number">
-    <input type="password" name="password" placeholder="Password">
-    <button type="submit">Login</button>
-    {% if error %}
-        <p style="color:red">{{ error }}</p>
-    {% endif %}
-</form>
+<div class="login-bg-wrapper">
+    <div class="bg-blur"></div>
+    <div class="login-content">
+        <h2>Login</h2>
+        <form method="post">
+            {% csrf_token %}
+            <input type="text" name="phone" placeholder="Phone number">
+            <input type="password" name="password" placeholder="Password">
+            <button type="submit">Login</button>
+            {% if error %}
+                <p style="color:red">{{ error }}</p>
+            {% endif %}
+        </form>
+    </div>
+</div>
 {% endblock %}
 
