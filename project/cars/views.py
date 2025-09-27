@@ -74,10 +74,10 @@ def add_car(request):
                 car = form.save(commit=False)
                 car.owner = request.user
                 car.save()
-                files = request.FILES.getlist('photos')  # Get uploaded files
+                files = request.FILES.getlist('photos')
                 if files:
                     for idx, f in enumerate(files):
-                        CarPhoto.objects.create(car=car, image=f, order=idx)  # Save each photo
+                        CarPhoto.objects.create(car=car, image=f, order=idx)
             send_mail(
                 subject='New Product',
                 message=(
@@ -95,7 +95,6 @@ def add_car(request):
         form = CarForm()
         photo_form = CarPhotoForm()
         return render(request, 'cars/add_car.html', {'form': form, 'photo_form': photo_form})
-
 
 @login_required
 def toggle_favorite(request, pk):
