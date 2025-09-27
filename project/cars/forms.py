@@ -10,12 +10,17 @@ class CarForm(forms.ModelForm):
     class Meta:
         model = Car
         fields = ['brand', 'model', 'year', 'price_per_day', 'capacity', 'transmission', 'city', 'fuel_capacity']
+
+class CarUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Car
+        fields = ['brand', 'model', 'year', 'price_per_day', 'capacity', 'transmission', 'city', 'fuel_capacity']
 class CarPhotoForm(forms.Form):
     photos = forms.FileField(
-        widget=forms.FileInput(),  # Remove attrs={'multiple': True}
-        required=True
+        widget=MultiFileInput,
+        required=False
     )
 class RentalForm(forms.ModelForm):
     class Meta:
         model = Rental
-        fields = ['car', 'start_date', 'end_date']
+        fields = ['start_date', 'days']

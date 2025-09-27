@@ -1,37 +1,111 @@
 {% extends 'base.html' %}
 {% block content %}
+
 <link rel="stylesheet" href="/static/css/detail.css">
-<h1>{{ car.brand }} {{ car.model }} ({{ car.year }})</h1>
-<p>Price per day: {{ car.price_per_day }}₾</p>
-<p>Capacity: {{ car.capacity }} people</p>
-<p>Transmission: {{ car.transmission }}</p>
-<p>City: {{ car.city }}</p>
-<p>Fuel Capacity: {{ car.fuel_capacity }}L</p>
-<p>Status: {% if car.available %}Available{% else %}Unavailable{% endif %}</p>
+<style>
+/* Button hover styles */
+.car-action-btn,
+.edit-btn,
+.sidebar-nav-btn {
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+.car-action-btn:hover,
+.edit-btn:hover,
+.sidebar-nav-btn:hover {
+    background: #1976d2 !important;
+    color: #fff !important;
+    box-shadow: 0 2px 8px rgba(25, 118, 210, 0.15);
+}
 
-<h3>Photos</h3>
-<div>
-    {% for photo in car.photos.all %}
-        <img src="{{ photo.image.url }}" width="200" alt="Car photo">
-   {% empty %}
-        <img src="/static/car_pics/default_car.jpg" width="200" alt="Default car photo">
-    {% endfor %}
+@media (max-width: 700px) {
+    .car-action-btn {
+        font-size: 0.9em !important;
+        padding: 8px 0 !important;
+    }
+    .car-action-col {
+        width: 100% !important;
+        min-width: 0 !important;
+        padding: 16px 0 16px 0 !important;
+        margin-right: 0 !important;
+    }
+}
+</style>
+<div style="display: flex; flex-direction: row; align-items: flex-start; justify-content: flex-start; min-height: 80vh; width: 100%; flex-wrap: wrap;">
+    <div style="flex: 2 1 320px; padding: 32px; min-width: 320px;">
+        <h1>{{ car.brand }} {{ car.model }} ({{ car.year }})</h1>
+        <p>Price per day: {{ car.price_per_day }}₾</p>
+        <p>Capacity: {{ car.capacity }} people</p>
+        <p>Transmission: {{ car.transmission }}</p>
+        <p>City: {{ car.city }}</p>
+        <p>Fuel Capacity: {{ car.fuel_capacity }}L</p>
+
+        <p>Status: {% if car.available %}Available{% else %}<span style="color:red;">Unavailable</span>{% endif %}</p>
+
+        <h3>Photos</h3>
+        <div>
+            {% for photo in car.photos.all %}
+                <img src="{{ photo.image.url }}" width="200" alt="Car photo">
+            {% empty %}
+                <img src="/static/car_pics/default_car.jpg" width="200" alt="Default car photo">
+            {% endfor %}
+        </div>
+    </div>
+    <div class="car-action-col" style="flex: 0.7 1 220px; padding: 32px 16px 32px 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 16px; margin-top: 64px; min-width: 220px; margin-right: 32px;">
+        {% if user.is_authenticated %}
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 16px; width: 200px; margin-right: 10px">
+                {% if car.available %}
+                    <form method="post" action="{% url 'cars:rent_car' car.pk %}" style="margin-bottom: 0; width: 100%;">
+                        {% csrf_token %}
+                        <button type="submit" class="car-action-btn" style="width: 100%; padding: 14px 0; font-size: 1em;">Rent this car</button>
+                    </form>
+                {% else %}
+                    <p style="color:red;">This car is currently unavailable for rent.</p>
+                {% endif %}
+                <form method="post" action="{% url 'cars:toggle_favorite' car.pk %}" style="margin-bottom: 0; width: 100%;">
+                    {% csrf_token %}
+                    <button type="submit" class="car-action-btn" style="width: 100%; padding: 14px 0; font-size: 1em;">
+                        {% if car in favorites %}Remove from Favorites{% else %}Add to Favorites{% endif %}
+                    </button>
+                </form>
+            </div>
+        {% else %}
+            <p><a href="{% url 'users:login' %}">Login</a> to rent or like this car.</p>
+        {% endif %}
+    </div>
+    <div style="flex: 1 1 320px; padding: 32px; border-left: 1px solid #eee; min-width: 320px; margin-top: 64px; align-self: flex-start;">
+        <div style="background: rgba(145, 145, 145, 0.12); color: #fff; border-radius: 16px; box-shadow: 0 2px 8px rgba(145, 145, 145, 0.21); padding: 24px;">
+            {% if user.is_authenticated %}
+                <h3 style="margin-top:0;">Your Rented Cars</h3>
+                {% if rentals %}
+                    <ul>
+                    {% for rental in rentals %}
+                        <li>{{ rental.car.brand }} {{ rental.car.model }} ({{ rental.car.year }})</li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>No rented cars.</p>
+                {% endif %}
+                <h3>Your Liked Cars</h3>
+                {% if favorites %}
+                    <ul>
+                    {% for fav in favorites %}
+                        <li>{{ fav.brand }} {{ fav.model }} ({{ fav.year }})</li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>No liked cars.</p>
+                {% endif %}
+            {% endif %}
+            <div style="margin-top: 32px; display: flex; flex-direction: column; gap: 16px;">
+                {% if user.is_authenticated and car.owner == user %}
+                    <a href="{% url 'cars:car_update' car.pk %}" class="edit-btn sidebar-nav-btn" style="width: 100%; padding: 12px 0; font-size: 1.1em; background: #444; color: #fff; border-radius: 8px; text-align: center;">Edit this car</a>
+                {% endif %}
+                <a href="{% url 'cars:home' %}" class="sidebar-nav-btn" style="display:inline-block; width: 100%; padding: 12px 0; font-size: 1.1em; background: #444; color: #fff; border-radius: 8px; text-align: center;">&larr; Back to list page</a>
+                <a href="{% url 'users:profile' %}" class="sidebar-nav-btn" style="display:inline-block; width: 100%; padding: 12px 0; font-size: 1.1em; background: #444; color: #fff; border-radius: 8px; text-align: center;">Go to Profile</a>
+            </div>
+        </div>
+    </div>
 </div>
-
-{% if user.is_authenticated %}
-    <form method="post" action="{% url 'cars:rent_car' car.pk %}">
-        {% csrf_token %}
-        <button type="submit">Rent this car</button>
-    </form>
-    <form method="post" action="{% url 'cars:toggle_favorite' car.pk %}">
-        {% csrf_token %}
-        <button type="submit">
-            {% if car in favorites %}Remove from Favorites{% else %}Add to Favorites{% endif %}
-        </button>
-    </form>
-{% else %}
-    <p><a href="{% url 'users:login' %}">Login</a> to rent or like this car.</p>
-{% endif %}
 {% endblock %}
 
     <!-- Optional: Map section -->

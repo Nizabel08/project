@@ -2,16 +2,29 @@
 {% block content %}
 <link rel="stylesheet" href="/static/css/rent_car.css">
 <div class="rent-container">
-    <h1>Rent Car: {{ car.name }}</h1>
+    <h1>Rent Car: {{ car.brand }} {{ car.model }} ({{ car.year }})</h1>
     <div class="car-info">
-        <img src="{{ car.main_photo.url }}" alt="{{ car.name }}" class="car-photo">
+        {% if car.photos.first %}
+            <img src="{{ car.photos.first.image.url }}" alt="{{ car.brand }} {{ car.model }}" class="car-photo">
+        {% else %}
+            <img src="/static/car_pics/default_car.jpg" alt="Default car photo" class="car-photo">
+        {% endif %}
         <p><strong>Brand:</strong> {{ car.brand }}</p>
         <p><strong>Model:</strong> {{ car.model }}</p>
         <p><strong>Year:</strong> {{ car.year }}</p>
-        <p><strong>Price per day:</strong> ${{ car.price_per_day }}</p>
+        <p><strong>Price per day:</strong> {{ car.price_per_day }}₾</p>
     </div>
     <form method="post">
         {% csrf_token %}
+        {% if form.errors %}
+            <div class="form-errors" style="color:red;">
+                <ul>
+                {% for field, errors in form.errors.items %}
+                    <li><strong>{{ field }}:</strong> {{ errors|join:', ' }}</li>
+                {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
         {{ form.as_p }}
         <button type="submit">Confirm Rental</button>
     </form>

@@ -1,14 +1,32 @@
-# project/project/cars/views.py
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import generic
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy, reverse
 from .models import Car, CarPhoto, Favorite, Rental, Notification
-from .forms import CarForm, CarPhotoForm, RentalForm
+from .forms import CarForm, CarPhotoForm, RentalForm, CarUpdateForm
 from django.contrib import messages
 from django.db import transaction
 from django.utils import timezone
 from datetime import timedelta
+from django.core.mail import send_mail
+
+
+@login_required
+def car_update(request, pk):
+    car = get_object_or_404(Car, pk=pk)
+    if car.owner != request.user:
+        messages.error(request, "You do not have permission to edit this car.")
+        return redirect('cars:car_detail', pk=pk)
+    if request.method == 'POST':
+        form = CarUpdateForm(request.POST, instance=car)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Car updated successfully.")
+            return redirect('cars:car_detail', pk=car.pk)
+    else:
+        form = CarUpdateForm(instance=car)
+    return render(request, 'cars/car_update.html', {'form': form, 'car': car})
+# project/project/cars/views.py
 
 class HomeView(generic.ListView):
     model = Car
@@ -31,7 +49,7 @@ class HomeView(generic.ListView):
         if capacity:
             qs = qs.filter(capacity=int(capacity))
         return qs
-
+        
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # Preserve filtering params in pagination links
@@ -57,14 +75,26 @@ def add_car(request):
                 car.owner = request.user
                 car.save()
                 files = request.FILES.getlist('photos')  # Get uploaded files
-                for idx, f in enumerate(files):
-                    CarPhoto.objects.create(car=car, image=f, order=idx)  # Save each photo
+                if files:
+                    for idx, f in enumerate(files):
+                        CarPhoto.objects.create(car=car, image=f, order=idx)  # Save each photo
+            send_mail(
+                subject='New Product',
+                message=(
+                    f'A new car {car.brand} {car.model} ({car.year}) was added by {request.user.username}'
+                ),
+                from_email='sender.example@gmail.com',
+                recipient_list=['recipient.example@gmail.com'],
+                fail_silently=False,
+            )
             messages.success(request, "Car added successfully.")
-            return redirect('cars:car_detail', pk=car.pk)
+            return redirect('users:profile')
+        else:
+            return render(request, 'cars/add_car.html', {'form': form, 'photo_form': photo_form})
     else:
         form = CarForm()
         photo_form = CarPhotoForm()
-    return render(request, 'cars/add_car.html', {'form': form, 'photo_form': photo_form})
+        return render(request, 'cars/add_car.html', {'form': form, 'photo_form': photo_form})
 
 
 @login_required
@@ -91,19 +121,21 @@ def rent_car(request, pk):
             rental = form.save(commit=False)
             rental.car = car
             rental.renter = request.user
+            rental.city_rented_in = car.city
             rental.price_paid = car.price_per_day * rental.days
             rental.end_date = rental.start_date + timedelta(days=rental.days)
             rental.save()
-            # set car as not available (simple approach)
             car.available = False
             car.save()
-            # create notification for owner
             Notification.objects.create(
                 user=car.owner,
                 message=f"Your car {car} was rented by {request.user.username} for {rental.days} days."
             )
             messages.success(request, f"Car rented successfully. Total: {rental.price_paid}. You can view your rental details on your profile page.")
             return redirect('users:profile')
+        else:
+            messages.error(request, "Rental form is invalid. Please check your input.")
+            return render(request, 'cars/rent_car.html', {'car': car, 'form': form})
     else:
         form = RentalForm(initial={'start_date': timezone.localdate()})
     return render(request, 'cars/rent_car.html', {'car': car, 'form': form})

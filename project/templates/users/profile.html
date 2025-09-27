@@ -9,6 +9,7 @@
 </head>
 <body>
     <h1>Profile Info</h1>
+    <a href="{% url 'cars:home' %}" style="display:inline-block;margin-bottom:20px;">&larr; Go to Cars List Page</a>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <h3>Account Information</h3>
@@ -19,29 +20,24 @@
         <button type="submit">Save Changes</button>
     </form>
 
-    <h3>Profile Picture</h3>
-    {% if request.user.userprofile.avatar %}
-        <img src="{{ request.user.userprofile.avatar.url }}" width="150" alt="profile picture">
-    {% else %}
-        <img src="{% static 'profile_pics/default.jpg' %}" width="150" alt="profile picture">
-    {% endif %}
+
 
     <hr>
     <h3>Rented Cars</h3>
-    {% if rentals %}
-        <ul>
-        {% for rental in rentals %}
-            <li>
-                {{ rental.car.brand }} {{ rental.car.model }} -
-                City: {{ rental.city_rented_in }},
-                Paid: {{ rental.price_paid }},
-                Days: {{ rental.days }}
-            </li>
-        {% endfor %}
-        </ul>
-    {% else %}
-        <p>No rented cars.</p>
-    {% endif %}
+{% if rentals %}
+    <ul>
+    {% for rental in rentals %}
+        <li>
+            {{ rental.car.brand }} {{ rental.car.model }} -
+            City: {{ rental.city_rented_in }},
+            Paid: {{ rental.price_paid }},
+            Days: {{ rental.days }}
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No rented cars.</p>
+{% endif %}
 
     <hr>
     <h3>Liked Cars</h3>

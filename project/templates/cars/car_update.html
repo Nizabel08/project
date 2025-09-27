@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+<link rel="stylesheet" href="/static/css/update.css">
+<h1>Edit Car: {{ car.brand }} {{ car.model }} ({{ car.year }})</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save Changes</button>
+</form>
+<a href="{% url 'cars:car_detail' car.pk %}">&larr; Back to car detail</a>
+{% endblock %}

@@ -5,8 +5,7 @@
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
-    <label for="photos">Photos:</label>
-    <input type="file" name="photos" id="photos" multiple>
+    {{ photo_form.as_p }}
     <button type="submit">Add car</button>
 </form>
 <a href="{% url 'cars:home' %}">back to list page</a>

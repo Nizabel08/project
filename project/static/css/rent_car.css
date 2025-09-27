@@ -28,8 +28,9 @@ h1 {
     margin-bottom: 20px;
 }
 .car-photo {
-    width: 50%;
-    height: 60vh;
+    width: 60%;
+    height: 100px;
+    object-fit: cover;
     max-width: 320px;
     border-radius: 8px;
     margin-bottom: 10px;
